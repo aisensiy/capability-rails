@@ -1,13 +1,15 @@
 Rails.application.routes.draw do
+  resources :tags, only: [:create, :show, :index], default: {format: :json} do
+    resources :exam_papers, only: [:create, :show, :index]
+  end
+
   resources :members, only: [:create, :show, :index], defaults: {format: :json} do
     post :login, on: :collection
     post :logout, on: :collection
-    post :assigned, on: :member
-    resources :leave_requests, only: [:create, :show, :index] do
+    resources :exam_requests, only: [:create, :show, :index] do
       post :processed, on: :member
     end
-    resources :timecards, only: [:create, :show, :index]
-    resources :leave_conflicts, only: [:create, :show, :index]
+    resources :certificates, only: [:create, :show, :index]
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
