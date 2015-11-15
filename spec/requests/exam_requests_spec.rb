@@ -49,20 +49,17 @@ RSpec.describe "ExamRequests", type: :request do
 
   describe "list exam_requests" do
     it "should list exam_requests" do
-      employee = create :employee
-
       5.times do |i|
-        attrs = attributes_for :exam_request, title: "title_#{i}"
-        employee.exam_requests.create attrs
+        @employee.exam_requests.create @exam_attr
       end
 
-      login(employee)
-      get "/members/#{employee.id}/exam_requests"
+      login(@employee)
+      get "/members/#{@employee.id}/exam_requests"
       expect(response).to have_http_status(200)
       data = JSON.parse(response.body)
-      expect(data.size).to eq(5)
+      expect(data.size).to eq(6)
       first = data[0]
-      expect(first["title"]).to eq("title_0")
+      expect(first['exam_time'].to_datetime.strftime("%Y-%M-%D %H:%m:%s")).to eq(@exam_request.exam_time.strftime("%Y-%M-%D %H:%m:%s"))
     end
   end
 
