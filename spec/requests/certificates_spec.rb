@@ -56,8 +56,7 @@ RSpec.describe "Certificates", type: :request do
   describe "list certificates" do
     it "should list certificates" do
       5.times do |i|
-        attrs = attributes_for :certificate, date: "2015-11-0#{i + 1}"
-        @employee.certificates.create attrs
+        @employee.certificates.create @certificate_attrs
       end
 
       login(@employee)
@@ -65,8 +64,6 @@ RSpec.describe "Certificates", type: :request do
       expect(response).to have_http_status(200)
       data = JSON.parse(response.body)
       expect(data.size).to eq(6)
-      first = data[-1]
-      expect(first["date"]).to eq("2015-11-05")
     end
   end
 end
