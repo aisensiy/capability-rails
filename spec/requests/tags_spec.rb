@@ -26,37 +26,20 @@ RSpec.describe "Tags", type: :request do
     end
   end
 
-  describe "login" do
-    it "should 400 if wrong password or username" do
-      post "/tags/login", {name: "asdf", password: "ddd"}
-      expect(response).to have_http_status(400)
-    end
-  end
-
-  describe "logout" do
-    it "should logout" do
-      admin = create :admin
-      post "/tags/login", {password: admin.password, name: admin.name}
-      post "/tags/logout"
-      expect(response).to have_http_status(200)
-      post "/tags", tag: {name: 'bb'}
-      expect(response).to have_http_status(401)
-    end
-  end
-
   describe "get one tag" do
     it "should get one tag" do
-      tag = create :employee
-      login(tag)
-      get "/tags/#{tag.id}"
+      tag = create :tag
+      admin = create :admin
+      login(admin)
+      get "/tags/#{tag.id}", format: :json
       expect(response).to have_http_status(200)
       data = JSON.parse(response.body)
       expect(data['name']).to eq(tag.name)
     end
 
     it "should 404" do
-      tag = create :employee
-      login(tag)
+      admin = create :admin
+      login(admin)
       get "/tags/1"
       expect(response).to have_http_status(404)
     end

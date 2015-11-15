@@ -9,7 +9,7 @@ class TagsController < ApplicationController
   # GET /tags/1
   # GET /tags/1.json
   def show
-    @tag = @member.tags.find(params[:id])
+    @tag = Tag.find(params[:id])
     if @tag.nil?
       render status: 404, nothing: true and return
     end

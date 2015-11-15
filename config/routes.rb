@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :tags, only: [:create, :show, :index], default: {format: :json} do
+  resources :tags, only: [:create, :show, :index], defaults: { format: :json } do
     resources :exam_papers, only: [:create, :show, :index]
   end
 
