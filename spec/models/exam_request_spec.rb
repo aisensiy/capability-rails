@@ -12,7 +12,7 @@ RSpec.describe ExamRequest, type: :model do
     request = @member.exam_requests.create(exam_time: Time.now + 1.days, tag_id: @tag.id)
     expect(request.status).to eq("created")
 
-    expect(@member.exam_requests.size).to eq(1)
+    expect(@member.exam_requests.size).to eq(2)
   end
 
   it 'should update failed without invalid status' do
