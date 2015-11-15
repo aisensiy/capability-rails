@@ -1,0 +1,2 @@
+module ExamRequestsHelper
+end

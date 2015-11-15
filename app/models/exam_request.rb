@@ -9,7 +9,7 @@ class ExamRequest
   embedded_in :member
 
   validates_presence_of :tag_id, :exam_time
-  validates_inclusion_of :status, in: [:created, :confirmed, :rejected, :finished, :started, :cancelled]
+  validates_inclusion_of :status, in: %w(created confirmed rejected finished started cancelled)
 
   def change_state(state, *options)
     state = state.to_sym
