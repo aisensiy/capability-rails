@@ -1,0 +1,17 @@
+<%= form_for(@timecard) do |f| %>
+  <% if @timecard.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@timecard.errors.count, "error") %> prohibited this timecard from being saved:</h2>
+
+      <ul>
+      <% @timecard.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

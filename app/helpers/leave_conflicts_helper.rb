@@ -1,0 +1,2 @@
+module LeaveConflictsHelper
+end

@@ -1,0 +1,17 @@
+<%= form_for(@leave_conflict) do |f| %>
+  <% if @leave_conflict.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@leave_conflict.errors.count, "error") %> prohibited this leave_conflict from being saved:</h2>
+
+      <ul>
+      <% @leave_conflict.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
