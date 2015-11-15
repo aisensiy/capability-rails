@@ -60,17 +60,17 @@ RSpec.describe "ExamPapers", type: :request do
   describe "list exam_papers" do
     it "should list exam_papers" do
       5.times do |i|
-        attrs = attributes_for :exam_paper, date: "2015-11-0#{i + 1}"
+        attrs = attributes_for :exam_paper, name: "name_#{i}"
         @tag.exam_papers.create attrs
       end
 
-      login(@tag)
+      login(@admin)
       get "/tags/#{@tag.id}/exam_papers"
       expect(response).to have_http_status(200)
       data = JSON.parse(response.body)
       expect(data.size).to eq(6)
-      first = data[-1]
-      expect(first["date"]).to eq("2015-11-05")
+      first = data[0]
+      expect(first["name"]).to eq(@tag.name)
     end
   end
 end
