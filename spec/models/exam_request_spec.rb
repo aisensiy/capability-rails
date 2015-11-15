@@ -16,12 +16,12 @@ RSpec.describe ExamRequest, type: :model do
   end
 
   it 'should update failed without invalid status' do
-    @request.status = 'abc'
-    result = @request.save
+    result = @request.change_state 'abc'
     expect(result).to be(false)
   end
 
-  it 'should ' do
-    
+  it 'should not update status with is cancelled finished rejected' do
+    result = @request.change_state(:confirmed)
+    expect(result).to be(false)
   end
 end
