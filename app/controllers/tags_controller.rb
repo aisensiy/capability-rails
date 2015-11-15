@@ -1,5 +1,5 @@
 class TagsController < ApplicationController
-
+  before_filter :authenticate
   # GET /tags
   # GET /tags.json
   def index

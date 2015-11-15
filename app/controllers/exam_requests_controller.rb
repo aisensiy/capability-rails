@@ -1,5 +1,6 @@
 class ExamRequestsController < ApplicationController
   # before_action :set_exam_request, only: [:show, :edit, :update, :destroy]
+  before_filter :authenticate
   before_filter :set_member
 
   # GET /exam_requests

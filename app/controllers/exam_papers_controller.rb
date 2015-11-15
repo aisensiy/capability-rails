@@ -1,5 +1,6 @@
 class ExamPapersController < ApplicationController
   # before_action :set_exam_paper, only: [:show, :edit, :update, :destroy]
+  before_filter :authenticate
   before_filter :set_tag, only: [:show, :index, :create]
 
   # GET /exam_papers

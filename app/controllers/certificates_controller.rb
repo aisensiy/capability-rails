@@ -1,5 +1,6 @@
 class CertificatesController < ApplicationController
   # before_action :set_certificate, only: [:show, :edit, :update, :destroy]
+  before_filter :authenticate
   before_filter :set_member, only: [:show, :index, :create]
 
   # GET /certificates
