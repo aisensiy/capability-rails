@@ -4,4 +4,6 @@ class ExamPaper
   field :description, type: String
 
   embedded_in :tag
+
+  validates_presence_of :name, :description
 end

@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Exam Papers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Index</th>
+      <th>Create</th>
+      <th>Show</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @exam_papers.each do |exam_paper| %>
+      <tr>
+        <td><%= exam_paper.index %></td>
+        <td><%= exam_paper.create %></td>
+        <td><%= exam_paper.show %></td>
+        <td><%= link_to 'Show', exam_paper %></td>
+        <td><%= link_to 'Edit', edit_exam_paper_path(exam_paper) %></td>
+        <td><%= link_to 'Destroy', exam_paper, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Exam paper', new_exam_paper_path %>
