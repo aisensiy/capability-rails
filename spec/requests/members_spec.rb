@@ -78,34 +78,4 @@ RSpec.describe "Members", type: :request do
     end
   end
 
-  describe "assign employee to manager" do
-    it "should assign employee to manager by admin" do
-      manager = create :manager
-      employee = create :employee
-      admin = create :admin
-      login admin
-
-      post "/members/#{employee.id}/assigned", manager_id: manager.id
-      expect(response).to have_http_status 200
-      expect(employee.assign).to eq(manager)
-    end
-
-    it "should 403 without admin role" do
-      manager = create :manager
-      employee = create :employee
-      login employee
-
-      post "/members/#{employee.id}/assigned", manager_id: manager.id
-      expect(response).to have_http_status 403
-    end
-
-    it "should 404 if member or team not found" do
-      employee = create :employee
-      admin = create :admin
-      login admin
-
-      post "/members/#{employee.id}/assigned", manager_id: 12
-      expect(response).to have_http_status 404
-    end
-  end
 end

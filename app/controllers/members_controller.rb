@@ -17,18 +17,6 @@ class MembersController < ApplicationController
     @members = Member.all
   end
 
-  def assigned
-    authorize! :assigned, Member.new
-    employee = Member.find(params[:id])
-    manager = Member.where(id: params[:manager_id], role: :manager).first
-    if manager.nil? || employee.nil?
-      render status: 404, nothing: true
-    else
-      employee.assign_to manager
-      render nothing: true, status: 200
-    end
-  end
-
   def create
     authorize! :create, Member.new
     @member = Member.new member_params
