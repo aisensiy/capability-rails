@@ -42,8 +42,8 @@ RSpec.describe "Certificates", type: :request do
       get "/members/#{@employee.id}/certificates/#{@certificate.id}"
       expect(response).to have_http_status(200)
       data = JSON.parse(response.body)
-      expect(data['hour']).to eq(@certificate.hour)
-      expect(data['date']).to eq(@certificate.date.to_s)
+      expect(data['exam']['id']).to eq(@certificate.exam_id)
+      expect(data['tag']['id']).to eq(@certificate.tag_id)
     end
 
     it "should 404" do

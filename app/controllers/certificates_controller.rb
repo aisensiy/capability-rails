@@ -15,11 +15,9 @@ class CertificatesController < ApplicationController
     if @certificate.nil?
       render status: 404, nothing: true and return
     end
-  end
 
-  # GET /certificates/new
-  def new
-    @certificate = LeaveRequest.new
+    @tag = Tag.find(@certificate.tag_id)
+    @exam = @member.exam_requests.find(@certificate.exam_id)
   end
 
   # POST /certificates
@@ -32,7 +30,7 @@ class CertificatesController < ApplicationController
     if certificate_params[:exam_id].nil? || certificate_params[:tag_id].nil?
       render status: 400, nothing: true and return
     end
-    
+
     @exam = @member.exam_requests.find(certificate_params[:exam_id])
     @tag = Tag.find(certificate_params[:tag_id])
 
