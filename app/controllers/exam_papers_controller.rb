@@ -1,6 +1,6 @@
 class ExamPapersController < ApplicationController
   # before_action :set_exam_paper, only: [:show, :edit, :update, :destroy]
-  before_filter :set_tag, only: [:show, :index]
+  before_filter :set_tag, only: [:show, :index, :create]
 
   # GET /exam_papers
   # GET /exam_papers.json
@@ -12,24 +12,16 @@ class ExamPapersController < ApplicationController
   # GET /exam_papers/1.json
   def show
     @exam_paper = @tag.exam_papers.find(params[:id])
+    p params
+    p @exam_paper
     if @exam_paper.nil?
       render status: 404, nothing: true and return
     end
   end
 
-  # GET /exam_papers/new
-  def new
-    @exam_paper = LeaveRequest.new
-  end
-
   # POST /exam_papers
   # POST /exam_papers.json
   def create
-    unless current_user.admin?
-      render status: 403, nothing: true and return
-    end
-
-    @tag = Tag.find(params[:tag_id])
     @exam_paper = @tag.exam_papers.build(exam_paper_params)
 
     if @exam_paper.save
@@ -42,8 +34,8 @@ class ExamPapersController < ApplicationController
   private
 
   def set_tag
-    @tag = tag.find(params[:tag_id])
-    if @tags.nil?
+    @tag = Tag.find(params[:tag_id])
+    if @tag.nil?
       render status: 404, nothing: true and return
     end
     unless current_user.admin?

@@ -35,16 +35,23 @@ RSpec.describe "ExamPapers", type: :request do
 
   describe "get one exam_paper" do
     it "should get one exam_paper" do
-      login(@tag)
+      login(@admin)
       get "/tags/#{@tag.id}/exam_papers/#{@exam_paper.id}"
       expect(response).to have_http_status(200)
       data = JSON.parse(response.body)
-      expect(data['hour']).to eq(@exam_paper.hour)
-      expect(data['date']).to eq(@exam_paper.date.to_s)
+      expect(data['name']).to eq(@exam_paper.name)
+      expect(data['description']).to eq(@exam_paper.description)
+    end
+
+    it "should 403 if not admin" do
+      employee = create :employee
+      login(employee)
+      get "/tags/#{@tag.id}/exam_papers/#{@exam_paper.id}"
+      expect(response).to have_http_status(403)
     end
 
     it "should 404" do
-      login(@tag)
+      login(@admin)
       get "/tags/#{@tag.id}/exam_papers/123"
       expect(response).to have_http_status(404)
     end
