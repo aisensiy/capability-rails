@@ -21,7 +21,13 @@ RSpec.describe ExamRequest, type: :model do
   end
 
   it 'should not update status with is cancelled finished rejected' do
+    @request.change_state(:rejected)
     result = @request.change_state(:confirmed)
+    expect(result).to be(false)
+  end
+
+  it 'should not update status to started without exam paper' do
+    result = @request.change_state(:started)
     expect(result).to be(false)
   end
 end

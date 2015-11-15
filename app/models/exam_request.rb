@@ -11,10 +11,26 @@ class ExamRequest
   validates_presence_of :tag_id, :exam_time
   validates_inclusion_of :status, in: [:created, :confirmed, :rejected, :finished, :started, :cancelled]
 
-  def change_state state
-    states = [:created, :confirmed, :rejected, :finished, :started, :cancelled]
-    return false unless states.include?(state.to_sym)
-    return false if [:confirmed, :rejected, :finished].include? state.to_sym
-    return true
+  def change_state(state, *options)
+    state = state.to_sym
+
+    valid_state_transform = {
+        created: [:rejected, :confirmed],
+        rejected: [],
+        confirmed: [:cancelled, :started],
+        started: [:finished],
+        cancelled: [],
+        finished: []
+    }
+
+    return false if valid_state_transform[self.status.to_sym].size == 0
+
+    valid_state = valid_state_transform[self.status.to_sym]
+    unless valid_state.include?(state)
+      return false
+    end
+
+    self.status = state
+    true
   end
 end
