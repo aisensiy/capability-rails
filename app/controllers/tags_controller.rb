@@ -3,7 +3,7 @@ class TagsController < ApplicationController
   # GET /tags
   # GET /tags.json
   def index
-    @tags = @member.tags.all
+    @tags = Tag.all
   end
 
   # GET /tags/1

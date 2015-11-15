@@ -48,16 +48,16 @@ RSpec.describe "Tags", type: :request do
   describe "list tags" do
     it "should list tags" do
       5.times do |i|
-        create :employee, name: "name_#{i}"
+        create :tag, name: "name_#{i}"
       end
-      tag = create :employee
-      login(tag)
+      employee = create :employee
+      login(employee)
       get "/tags"
       expect(response).to have_http_status(200)
       data = JSON.parse(response.body)
-      expect(data.size).to eq(6)
-      first = data[0]
-      expect(first["name"]).to eq("name_0")
+      expect(data.size).to eq(5)
+      first = data[-1]
+      expect(first["name"]).to eq("name_4")
     end
   end
 
