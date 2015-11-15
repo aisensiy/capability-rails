@@ -11,6 +11,10 @@ class ExamRequest
   validates_presence_of :tag_id, :exam_time
   validates_inclusion_of :status, in: %w(created confirmed rejected finished started cancelled)
 
+  def tag
+    Tag.find(self.tag_id)
+  end
+
   def change_state(state, *options)
     state = state.to_sym
 

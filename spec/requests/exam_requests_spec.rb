@@ -32,25 +32,17 @@ RSpec.describe "ExamRequests", type: :request do
 
   describe "get one exam_request" do
     it "should get one exam_request" do
-      employee = create :employee
-      leave_attrs = attributes_for :exam_request
-      exam_request = employee.exam_requests.create leave_attrs
-
-      login(employee)
-      get "/members/#{employee.id}/exam_requests/#{exam_request.id}"
+      login(@employee)
+      get "/members/#{@employee.id}/exam_requests/#{@exam_request.id}"
       expect(response).to have_http_status(200)
       data = JSON.parse(response.body)
-      expect(data['title']).to eq(exam_request.title)
-      expect(data['status']).to eq(exam_request.status.to_s)
+      expect(data['exam_time'].to_datetime.strftime("%Y-%M-%D %H:%m:%s")).to eq(@exam_request.exam_time.strftime("%Y-%M-%D %H:%m:%s"))
+      expect(data['status']).to eq(@exam_request.status.to_s)
     end
 
     it "should 404" do
-      employee = create :employee
-      leave_attrs = attributes_for :exam_request
-      exam_request = employee.exam_requests.create leave_attrs
-
-      login(employee)
-      get "/members/#{employee.id}/exam_requests/123"
+      login(@employee)
+      get "/members/#{@employee.id}/exam_requests/123"
       expect(response).to have_http_status(404)
     end
   end
