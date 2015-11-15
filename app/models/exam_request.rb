@@ -5,6 +5,8 @@ class ExamRequest
   field :status, default: "created"
   field :exam_time, type: Time
   field :tag_id, type: String
+  field :exam_paper_id, type: String
+  field :grade, type: Integer
 
   embedded_in :member
 
@@ -34,7 +36,7 @@ class ExamRequest
       return false
     end
 
-    self.status = state
+    self.status = state.to_s
     true
   end
 end

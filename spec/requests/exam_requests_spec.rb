@@ -2,10 +2,12 @@ require 'rails_helper'
 
 RSpec.describe "ExamRequests", type: :request do
   before(:each) do
+    @admin = create :admin
     @employee = create :employee
     @tag = create :tag
     @exam_attr ={ exam_time: Time.now + 2.days, tag_id: @tag.id }
     @exam_request = @employee.exam_requests.create(@exam_attr)
+    @exam_paper = @tag.exam_papers.create attributes_for(:exam_paper)
   end
   describe "create new exam_request" do
     it "should 403 without employee_id login" do
@@ -64,34 +66,57 @@ RSpec.describe "ExamRequests", type: :request do
   end
 
   describe "process exam_requests" do
-    before(:each) do
-      @employee = create :employee
-      @manager = create :manager
-      @employee.assign_to @manager
-
-      leave_attrs = attributes_for :exam_request
-      @exam_request = @employee.exam_requests.create leave_attrs
-    end
-
-    it "should approve request" do
-      login(@manager)
-      post "/members/#{@employee.id}/exam_requests/#{@exam_request.id}/processed", approved: true
+    it "should confirm request" do
+      login(@admin)
+      post "/members/#{@employee.id}/exam_requests/#{@exam_request.id}/processed", state: "confirmed"
       expect(response).to have_http_status 200
       @exam_request.reload
-      expect(@exam_request.approved?).to be(true)
+      expect(@exam_request.status).to eq("confirmed")
     end
 
     it "should reject request" do
-      login(@manager)
-      post "/members/#{@employee.id}/exam_requests/#{@exam_request.id}/processed", rejected: true
+      login(@admin)
+      post "/members/#{@employee.id}/exam_requests/#{@exam_request.id}/processed", state: "rejected"
       expect(response).to have_http_status 200
       @exam_request.reload
-      expect(@exam_request.rejected?).to be(true)
+      expect(@exam_request.status).to eq("rejected")
     end
 
-    it "should 403 if not employee's manger" do
+    it "should cancel exam" do
+      login(@admin)
+      @exam_request.status = "confirmed"
+      @exam_request.save
+      post "/members/#{@employee.id}/exam_requests/#{@exam_request.id}/processed", state: "cancelled"
+      expect(response).to have_http_status 200
+      @exam_request.reload
+      expect(@exam_request.status).to eq("cancelled")
+    end
+
+    it "should start exam" do
+      login(@admin)
+      @exam_request.status = "confirmed"
+      @exam_request.save
+      post "/members/#{@employee.id}/exam_requests/#{@exam_request.id}/processed", state: "started", exam_paper_id: @exam_paper.id
+      expect(response).to have_http_status 200
+      @exam_request.reload
+      expect(@exam_request.status).to eq("started")
+      expect(@exam_request.exam_paper_id).to eq(@exam_paper.id.to_s)
+    end
+
+    it 'should finish exam' do
+      login(@admin)
+      @exam_request.status = "started"
+      @exam_request.save
+      post "/members/#{@employee.id}/exam_requests/#{@exam_request.id}/processed", state: "finished", grade: 100
+      expect(response).to have_http_status 200
+      @exam_request.reload
+      expect(@exam_request.status).to eq("finished")
+      expect(@exam_request.grade).to eq(100)
+    end
+
+    it "should 403 if not admin" do
       login(@employee)
-      post "/members/#{@employee.id}/exam_requests/#{@exam_request.id}/processed", rejected: true
+      post "/members/#{@employee.id}/exam_requests/#{@exam_request.id}/processed", state: "confirmed"
       expect(response).to have_http_status 403
     end
   end

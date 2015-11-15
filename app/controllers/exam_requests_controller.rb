@@ -23,19 +23,32 @@ class ExamRequestsController < ApplicationController
       render status: 404, nothing: true and return
     end
 
-    if current_user != @member.assign
+    unless current_user.admin?
       render status: 403, nothing: true and return
     end
 
-    if params[:approved]
-      @exam_request.approved!
-    elsif params[:rejected]
-      @exam_request.rejected!
-    else
-      render status: 400, nothing: true and return
-    end
+    if @exam_request.change_state params[:state]
+      if params[:state] == 'started'
+        @exam_paper = @exam_request.tag.exam_papers.find(params[:exam_paper_id])
+        if @exam_paper.nil?
+          render status: 400, nothing: true and return
+        end
+        @exam_request.exam_paper_id = params[:exam_paper_id]
+      end
 
-    render status: 200, nothing: true
+      if params[:state] == 'finished'
+        grade = params[:grade]
+        if grade.nil?
+          render status: 400, nothing: true and return
+        end
+        @exam_request.grade = grade
+      end
+
+      @exam_request.save
+      render status: 200, nothing: true
+    else
+      render status: 400, nothing: true
+    end
   end
 
   # POST /exam_requests
@@ -57,14 +70,9 @@ class ExamRequestsController < ApplicationController
 
   def set_member
     @member = Member.find(params[:member_id])
-    if @member != current_user
+    if @member != current_user && !current_user.admin?
       render status: 403, nothing: true and return
     end
-  end
-
-  # Use callbacks to share common setup or constraints between actions.
-  def set_exam_request
-    @exam_request = LeaveRequest.find(params[:id])
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
